@@ -3,69 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wemoction - Jurus Kelola Emosi</title>
+    <title>Game BK: Wemoction ARKA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .wheel-container {
-            position: relative;
-            width: 280px;
-            height: 280px;
-            margin: 0 auto;
-        }
-        @media(min-width: 380px) {
-            .wheel-container {
-                width: 310px;
-                height: 310px;
-            }
-        }
-        .ring {
-            position: absolute;
-            border-radius: 50%;
-            transition: transform 4s cubic-bezier(0.15, 0.9, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+        .wheel-container { position: relative; width: 290px; height: 290px; margin: 0 auto; cursor: pointer; }
+        @media(min-width: 380px) { .wheel-container { width: 320px; height: 320px; } }
+        .ring { position: absolute; border-radius: 50%; transition: transform 4s cubic-bezier(0.15, 0.9, 0.2, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        
+        #outerRing { top: 0; left: 0; width: 100%; height: 100%; background: conic-gradient(#ffb3ba 0deg 60deg, #ffdfba 60deg 120deg, #baffc9 120deg 180deg, #bae1ff 180deg 240deg, #ffc6ff 240deg 300deg, #e8baff 300deg 360deg); border: 4px solid #ffffff; }
+        #innerRing { top: 17.5%; left: 17.5%; width: 65%; height: 65%; background: conic-gradient(#f8fafc 0deg 60deg, #fff7ed 60deg 120deg, #f0fdf4 120deg 180deg, #eff6ff 180deg 240deg, #faf5ff 240deg 300deg, #fdf2f8 300deg 360deg); border: 3px solid #ffffff; z-index: 10; }
+        .slice-content { position: absolute; width: 100%; height: 100%; top: 0; left: 0; display: flex; flex-col; align-items: center; justify-content: flex-start; pointer-events: none; }
+        .center-pin { position: absolute; top: 40%; left: 40%; width: 20%; height: 20%; background: radial-gradient(circle, #cbd5e1 0%, #64748b 100%); border-radius: 50%; z-index: 20; border: 3px solid #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center; color: white; font-size: 10px; font-weight: bold; }
+        
+        /* Animasi Game */
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        .game-card { animation: popIn 0.4s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-[#a8e6cf] text-slate-800 min-h-screen flex flex-col font-sans pb-10">
+
+    <!-- Header -->
+    <header class="pt-5 pb-3 text-center px-4">
+        <h1 class="text-2xl font-black text-[#0f2c59] tracking-tight">WHEEL OF EMOTION</h1>
+        <div class="inline-block bg-[#1b4965] text-white font-bold text-xs px-4 py-1.5 rounded-full shadow-md mt-1">
+            🎮 GAME KELOLA EMOSI (METODE ARKA)
+        </div>
+    </header>
+
+    <!-- Main Game Area -->
+    <main class="max-w-md mx-auto px-4 w-full flex-grow flex flex-col items-center">
+        
+        <!-- Tombol Aksi -->
+        <div class="flex gap-2 w-full my-2">
+            <button onclick="spinWheels()" class="flex-1 bg-red-500 hover:bg-red-600 active:scale-95 text-white font-black py-3 px-4 rounded-xl shadow-lg transition text-sm tracking-wider uppercase">
+                <i class="fa-solid fa-play mr-1"></i> MULAI MAIN
+            </button>
+            <button onclick="resetGame()" class="bg-white hover:bg-slate-100 active:scale-95 text-slate-700 font-bold py-3 px-4 rounded-xl shadow transition text-sm">
+                <i class="fa-solid fa-rotate-right"></i>
+            </button>
+        </div>
+
+        <!-- Roda Putar -->
+        <div class="wheel-container my-4" onclick="spinWheels()">
+            <!-- Penunjuk -->
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 z-30 w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-t-[24px] border-t-red-600 drop-shadow-lg"></div>
+
+            <div id="outerRing" class="ring">
+                <div class="slice-content" style="transform: rotate(30deg);"><div class="mt-2 text-center text-slate-800 font-extrabold text-[11px] leading-tight"><i class="fa-solid fa-face-angry text-sm block mb-1 text-red-500"></i>Kritik/<br>Bully</div></div>
+                <div class="slice-content" style="transform: rotate(90deg);"><div class="mt-2 text-center text-slate-800 font-extrabold text-[11px] leading-tight"><i class="fa-solid fa-file-xmark text-sm block mb-1 text-amber-600"></i>Gagal<br>Ujian</div></div>
+                <div class="slice-content" style="transform: rotate(150deg);"><div class="mt-2 text-center text-slate-800 font-extrabold text-[11px] leading-tight"><i class="fa-solid fa-people-arrows text-sm block mb-1 text-emerald-700"></i>Konflik<br>Keluarga</div></div>
+                <div class="slice-content" style="transform: rotate(210deg);"><div class="mt-2 text-center text-slate-800 font-extrabold text-[11px] leading-tight"><i class="fa-solid fa-user-slash text-sm block mb-1 text-sky-700"></i>Dikucilkan</div></div>
+                <div class="slice-content" style="transform: rotate(270deg);"><div class="mt-2 text-center text-slate-800 font-extrabold text-[11px] leading-tight"><i class="fa-solid fa-layer-group text-sm block mb-1 text-purple-700"></i>Frustrasi<br>Tugas</div></div>
+                <div class="slice-content" style="transform: rotate(330deg);"><div class="mt-2 text-center text-slate-800 font-extrabold text-[11px] leading-tight"><i class="fa-solid fa-mobile-screen-button text-sm block mb-1 text-pink-600"></i>Insecure<br>Medsos</div></div>
+            </div>
+
+            <div id="innerRing" class="ring">
+                <div class="slice-content" style="transform: rotate(30deg);"><div class="mt-1.5 text-center text-slate-700 font-bold text-[8px] leading-none"><i class="fa-solid fa-lungs text-[10px] block mb-0.5 text-indigo-500"></i>STOP & Pause</div></div>
+                <div class="slice-content" style="transform: rotate(90deg);"><div class="mt-1.5 text-center text-slate-700 font-bold text-[8px] leading-none"><i class="fa-solid fa-brain text-[10px] block mb-0.5 text-amber-500"></i>Labeling<br>Emotion</div></div>
+                <div class="slice-content" style="transform: rotate(150deg);"><div class="mt-1.5 text-center text-slate-700 font-bold text-[8px] leading-none"><i class="fa-solid fa-comments text-[10px] block mb-0.5 text-emerald-600"></i>CARA<br>Comm.</div></div>
+                <div class="slice-content" style="transform: rotate(210deg);"><div class="mt-1.5 text-center text-slate-700 font-bold text-[8px] leading-none"><i class="fa-solid fa-heart text-[10px] block mb-0.5 text-rose-500"></i>Self<br>Compassion</div></div>
+                <div class="slice-content" style="transform: rotate(270deg);"><div class="mt-1.5 text-center text-slate-700 font-bold text-[8px] leading-none"><i class="fa-solid fa-list-check text-[10px] block mb-0.5 text-purple-500"></i>Break It<br>Down</div></div>
+                <div class="slice-content" style="transform: rotate(330deg);"><div class="mt-1.5 text-center text-slate-700 font-bold text-[8px] leading-none"><i class="fa-solid fa-sun text-[10px] block mb-0.5 text-sky-500"></i>Reality<br>Check</div></div>
+            </div>
+
+            <div class="center-pin" id="centerPin">TAP!</div>
+        </div>
+
+        <!-- Misi ARKA (Muncul setelah roda berhenti) -->
+        <div id="arkaMission" class="w-full hidden game-card mt-2">
+            <div class="bg-[#1b4965] text-white p-3 rounded-t-2xl flex justify-between items-center shadow-md border-b-4 border-amber-400">
+                <span class="font-black tracking-widest text-sm">🎯 MISI ARKA KAMU!</span>
+                <span class="bg-amber-400 text-[#1b4965] text-[10px] font-bold px-2 py-0.5 rounded-full">TANTANGAN AKTIF</span>
+            </div>
+            
+            <div class="bg-white p-4 rounded-b-2xl shadow-lg border-2 border-t-0 border-[#1b4965] space-y-3">
+                <!-- A: Aktivitas -->
+                <div class="flex gap-3 items-start bg-slate-50 p-2 rounded-lg border border-slate-100">
+                    <div class="bg-red-100 text-red-600 font-black w-7 h-7 flex items-center justify-center rounded-full flex-shrink-0">A</div>
+                    <div>
+                        <h4 class="text-[11px] font-extrabold text-slate-700 uppercase">Aktivitas (Pemicu)</h4>
+                        <p id="arkaA" class="text-xs text-slate-600 mt-0.5 font-medium"></p>
+                    </div>
+                </div>
+
+                <!-- R: Refleksi -->
+                <div class="flex gap-3 items-start bg-slate-50 p-2 rounded-lg border border-slate-100">
+                    <div class="bg-amber-100 text-amber-600 font-black w-7 h-7 flex items-center justify-center rounded-full flex-shrink-0">R</div>
+                    <div>
+                        <h4 class="text-[11px] font-extrabold text-slate-700 uppercase">Refleksi</h4>
+                        <p class="text-xs text-slate-600 mt-0.5 font-medium">Apa emosi pertama yang kamu rasakan jika berada di situasi tersebut? (Marah, sedih, kecewa, atau panik?)</p>
+                    </div>
+                </div>
+
+                <!-- K: Konseptualisasi -->
+                <div class="flex gap-3 items-start bg-slate-50 p-2 rounded-lg border border-slate-100">
+                    <div class="bg-emerald-100 text-emerald-600 font-black w-7 h-7 flex items-center justify-center rounded-full flex-shrink-0">K</div>
+                    <div>
+                        <h4 class="text-[11px] font-extrabold text-slate-700 uppercase">Konseptualisasi (Jurus)</h4>
+                        <p id="arkaK" class="text-xs text-slate-600 mt-0.5 font-medium"></p>
+                    </div>
+                </div>
+
+                <!-- A: Aplikasi -->
+                <div class="flex gap-3 items-start bg-slate-50 p-2 rounded-lg border border-slate-100">
+                    <div class="bg-blue-100 text-blue-600 font-black w-7 h-7 flex items-center justify-center rounded-full flex-shrink-0">A</div>
+                    <div>
+                        <h4 class="text-[11px] font-extrabold text-slate-700 uppercase">Aplikasi</h4>
+                        <p class="text-xs text-slate-600 mt-0.5 font-medium">Tulis komitmenmu di LKPD: <i>"Mulai sekarang, jika saya menghadapi situasi ini, saya akan menggunakan jurus tersebut."</i></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="mt-4 text-center text-[10px] font-bold text-[#1b4965] tracking-widest uppercase">
+        Layanan BK SMAN 6 Banjarmasin
+    </footer>
+
+    <script>
+        const outerData = [
+            "Kritik / Bully: Ada teman yang memberikan komentar negatif atau mengejekmu di sekolah/grup chat.",
+            "Gagal Ujian: Kamu sudah belajar keras, tapi nilai ujian yang keluar jauh di bawah harapanmu.",
+            "Konflik Keluarga: Terjadi salah paham dan perdebatan dengan orang tua atau saudara di rumah.",
+            "Dikucilkan: Kamu merasa teman-teman di kelas menjauhi atau tidak mengajakmu mengobrol.",
+            "Frustrasi Tugas: Tugas sekolah sangat banyak, menumpuk, dan deadline-nya besok pagi.",
+            "Insecure Medsos: Kamu merasa iri dan tidak percaya diri setelah melihat postingan pencapaian orang lain."
+        ];
+
+        const innerData = [
+            "Jurus STOP & Pause: Berhenti sejenak dari apapun yang kamu lakukan. Ambil napas dalam-dalam 3 kali untuk menenangkan saraf sebelum bereaksi.",
+            "Jurus Labeling Emotion: Sadari emosimu. Katakan dalam hati secara spesifik: 'Oke, aku sedang merasa marah/cemas/kecewa saat ini', lalu terima perasaan itu.",
+            "Jurus CARA Communication: Gunakan komunikasi asertif. Dengarkan lawan bicaramu, ajak bicara dengan tenang, dan saling mengerti tanpa harus marah-marah.",
+            "Jurus Self-Compassion: Berbaik hatilah pada dirimu sendiri. Tidak apa-apa untuk merasa gagal sesekali, kamu tetap berharga.",
+            "Jurus Break It Down: Jangan panik melihat masalah besar. Pecah tugas/masalahmu menjadi langkah-langkah kecil, lalu kerjakan satu per satu.",
+            "Jurus Reality Check: Filter pikiran negatifmu. Fokus pada fakta yang ada, bukan pada asumsi atau ketakutan berlebihan di kepalamu."
+        ];
+
+        let outerRotation = 0;
+        let innerRotation = 0;
+        let isSpinning = false;
+
+        function spinWheels() {
+            if(isSpinning) return;
+            isSpinning = true;
+
+            // Sembunyikan kartu Misi ARKA jika sedang main ulang
+            document.getElementById('arkaMission').classList.add('hidden');
+            document.getElementById('centerPin').innerText = "WAIT";
+
+            const randomOuterSpin = Math.floor(Math.random() * 360) + 1440;
+            const randomInnerSpin = Math.floor(Math.random() * 360) + 2160;
+
+            outerRotation += randomOuterSpin;
+            innerRotation += randomInnerSpin;
+
+            document.getElementById('outerRing').style.transform = `rotate(${outerRotation}deg)`;
+            document.getElementById('innerRing').style.transform = `rotate(${innerRotation}deg)`;
+
+            setTimeout(() => {
+                const outerIndex = Math.floor(((outerRotation % 360) / 360) * outerData.length);
+                const innerIndex = Math.floor(((innerRotation % 360) / 360) * innerData.length);
+
+                const selectedOuter = outerData[(outerData.length - (outerIndex % outerData.length)) % outerData.length];
+                const selectedInner = innerData[(innerData.length - (innerIndex % innerData.length)) % innerData.length];
+
+                // Memasukkan hasil putaran ke dalam format Misi ARKA
+                document.getElementById('arkaA').innerText = selectedOuter;
+                document.getElementById('arkaK').innerText = selectedInner;
+                
+                // Tampilkan Kartu Misi
+                document.getElementById('arkaMission').classList.remove('hidden');
+                document.getElementById('centerPin').innerText = "TAP!";
+                isSpinning = false;
+
+                // Scroll otomatis ke bawah agar misi terlihat
+                document.getElementById('arkaMission').scrollIntoView({ behavior: "smooth" });
+
+            }, 4000);
         }
 
-        #outerRing {
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: conic-gradient(
-                #ffb3ba 0deg 60deg,
-                #ffdfba 60deg 120deg,
-                #baffc9 120deg 180deg,
-                #bae1ff 180deg 240deg,
-                #ffc6ff 240deg 300deg,
-                #e8baff 300deg 360deg
-            );
-            border: 4px solid #ffffff;
+        function resetGame() {
+            outerRotation = 0;
+            innerRotation = 0;
+            isSpinning = false;
+            document.getElementById('outerRing').style.transform = `rotate(0deg)`;
+            document.getElementById('innerRing').style.transform = `rotate(0deg)`;
+            document.getElementById('arkaMission').classList.add('hidden');
+            document.getElementById('centerPin').innerText = "TAP!";
         }
-
-        #innerRing {
-            top: 17.5%; left: 17.5%;
-            width: 65%; height: 65%;
-            background: conic-gradient(
-                #f8fafc 0deg 60deg,
-                #fff7ed 60deg 120deg,
-                #f0fdf4 120deg 180deg,
-                #eff6ff 180deg 240deg,
-                #faf5ff 240deg 300deg,
-                #fdf2f8 300deg 360deg
-            );
-            border: 3px solid #ffffff;
-            z-index: 10;
-        }
-
-        .slice-content {
-            position: absolute;
-            width: 100%; height: 100%;
-            top: 0; left: 0;
-            display: flex; flex-col;
-            align-items: center; justify-content: flex-start;
-            pointer-events: none;
-        }
-
-        .center-pin {
-            position: absolute;
-            top: 42%; left: 42%;
-            width: 16%; height: 16%;
-            background: radial-gradient(circle, #cbd5e1
+    </script>
+</body>
+</html>
