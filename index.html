@@ -3,219 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wemoction - Roda Putar Kelola Emosi</title>
+    <title>Wemoction - Jurus Kelola Emosi</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .wheel-container {
             position: relative;
-            width: 290px;
-            height: 290px;
+            width: 330px;
+            height: 330px;
             margin: 0 auto;
         }
         @media(min-width: 640px) {
             .wheel-container {
-                width: 340px;
-                height: 340px;
+                width: 380px;
+                height: 380px;
             }
         }
         .ring {
             position: absolute;
             border-radius: 50%;
             transition: transform 4s cubic-bezier(0.15, 0.9, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
         }
-        /* Ring Luar dengan 6 Juring Warna-Warni */
+
+        /* Ring Luar 6 Juring Pastel Presisi */
         #outerRing {
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: conic-gradient(
-                #fecdd3 0deg 60deg,
-                #fef08a 60deg 120deg,
-                #bbf7d0 120deg 180deg,
-                #bfdbfe 180deg 240deg,
-                #fed7aa 240deg 300deg,
-                #e9d5ff 300deg 360deg
-            );
-            border: 4px solid #4f46e5;
-        }
-        /* Ring Dalam dengan 6 Juring Warna-Warni */
-        #innerRing {
-            top: 20%;
-            left: 20%;
-            width: 60%;
-            height: 60%;
-            background: conic-gradient(
-                #fb7185 0deg 60deg,
-                #facc15 60deg 120deg,
-                #4ade80 120deg 180deg,
-                #60a5fa 180deg 240deg,
-                #fb923c 240deg 300deg,
-                #c084fc 300deg 360deg
+                #ffb3ba 0deg 60deg,
+                #ffdfba 60deg 120deg,
+                #baffc9 120deg 180deg,
+                #bae1ff 180deg 240deg,
+                #ffc6ff 240deg 300deg,
+                #e8baff 300deg 360deg
             );
             border: 4px solid #ffffff;
+        }
+
+        /* Ring Dalam 6 Juring Pastel Terang */
+        #innerRing {
+            top: 17.5%; left: 17.5%;
+            width: 65%; height: 65%;
+            background: conic-gradient(
+                #f8fafc 0deg 60deg,
+                #fff7ed 60deg 120deg,
+                #f0fdf4 120deg 180deg,
+                #eff6ff 180deg 240deg,
+                #faf5ff 240deg 300deg,
+                #fdf2f8 300deg 360deg
+            );
+            border: 3px solid #ffffff;
             z-index: 10;
         }
-        .center-cap {
+
+        /* Teks & Ikon Terdistribusi Melingkar */
+        .slice-content {
             position: absolute;
-            top: 38%;
-            left: 38%;
-            width: 24%;
-            height: 24%;
-            background: #ffffff;
+            width: 100%; height: 100%;
+            top: 0; left: 0;
+            display: flex; flex-col;
+            align-items: center; justify-content: flex-start;
+            pointer-events: none;
+        }
+
+        .center-pin {
+            position: absolute;
+            top: 42%; left: 42%;
+            width: 16%; height: 16%;
+            background: radial-gradient(circle, #cbd5e1 0%, #64748b 100%);
             border-radius: 50%;
             z-index: 20;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 3px solid #4f46e5;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            border: 2px solid #ffffff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between font-sans">
+<body class="bg-[#a8e6cf] text-slate-800 min-h-screen flex flex-col justify-between font-sans pb-6">
 
-    <!-- Header -->
-    <header class="bg-indigo-600 text-white py-3 shadow-md">
-        <div class="max-w-4xl mx-auto px-4 text-center">
-            <h1 class="text-lg sm:text-xl font-bold tracking-wide">WHEEL OF EMOTION (WEMOCTION)</h1>
-            <p class="text-xs text-indigo-100 mt-0.5">Media Interaktif Layanan BK: Jurus Kelola Emosi (Metode ARKA)</p>
+    <!-- Header / Banner Atas -->
+    <header class="pt-6 pb-2 text-center px-4">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-[#0f2c59] tracking-tight">WHEEL OF EMOTION</h1>
+        <h2 class="text-xl sm:text-2xl font-bold text-[#0f2c59] mb-2">(WEMOCTION):</h2>
+        
+        <div class="inline-block bg-[#1b4965] text-white font-black text-sm sm:text-base px-6 py-1.5 rounded-md shadow-md">
+            JURUS KELOLA EMOSI
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 py-4 flex-grow flex flex-col md:flex-row gap-6 items-center justify-center w-full">
+    <main class="max-w-md mx-auto px-4 w-full flex-grow flex flex-col items-center">
         
-        <!-- Sisi Kiri: Simulasi Roda Putar -->
-        <div class="bg-white p-5 rounded-2xl shadow-lg border border-slate-100 flex flex-col items-center w-full md:w-1/2">
-            <h2 class="text-sm font-bold text-indigo-700 mb-3 text-center">🎯 Putar Roda Pemicu & Teknik</h2>
-            
-            <!-- Area Roda -->
-            <div class="wheel-container mb-5">
-                <!-- Penunjuk / Jarum (Top) -->
-                <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-30 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[18px] border-t-red-600 drop-shadow-md"></div>
+        <!-- Area Roda Putar -->
+        <div class="wheel-container my-4">
+            <!-- Panah Penunjuk Atas (Merah) -->
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-30 w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-t-[22px] border-t-red-600 drop-shadow-md"></div>
 
-                <!-- Ring Luar -->
-                <div id="outerRing" class="ring"></div>
-
-                <!-- Ring Dalam -->
-                <div id="innerRing" class="ring"></div>
-
-                <!-- Titik Tengah -->
-                <div class="center-cap">
-                    <span id="statusText" class="text-[10px] font-extrabold text-indigo-900 text-center leading-tight">PUTAR</span>
-                </div>
+            <!-- Ring Luar -->
+            <div id="outerRing" class="ring">
+                <div class="slice-content" style="transform: rotate(30deg);"><div class="mt-3 text-center text-slate-800 font-extrabold text-[11px] leading-tight"><i class="fa-solid fa-face-angry text-sm block mb-0.5 text-red-500"></i>Kritik/<br>Bully</div></div>
+                <div class="slice-content" style="transform: rotate(90deg);"><div class="mt-3 text-center text-slate-800 font-extrabold text-[11px] leading-tight"><i class="fa-solid fa-file-xmark text-sm block mb-0.5 text-amber-600"></i>Gagal<br>Ujian</div></div>
+                <div class="slice-content" style="transform: rotate(150deg);"><div class="mt-3 text-center text-slate-800 font-extrabold text-[11px] leading-tight"><i class="fa-solid fa-people-arrows text-sm block mb-0.5 text-emerald-700"></i>Konflik<br>Keluarga</div></div>
+                <div class="slice-content" style="transform: rotate(210deg);"><div class="mt-3 text-center text-slate-800 font-extrabold text-[11px] leading-tight"><i class="fa-solid fa-user-slash text-sm block mb-0.5 text-sky-700"></i>Dikucilkan</div></div>
+                <div class="slice-content" style="transform: rotate(270deg);"><div class="mt-3 text-center text-slate-800 font-extrabold text-[11px] leading-tight"><i class="fa-solid fa-layer-group text-sm block mb-0.5 text-purple-700"></i>Frustrasi<br>Tugas</div></div>
+                <div class="slice-content" style="transform: rotate(330deg);"><div class="mt-3 text-center text-slate-800 font-extrabold text-[11px] leading-tight"><i class="fa-solid fa-mobile-screen-button text-sm block mb-0.5 text-pink-600"></i>Insecure<br>Medsos</div></div>
             </div>
 
-            <!-- Tombol Aksi -->
-            <div class="flex gap-3 w-full">
-                <button onclick="spinWheels()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold py-2.5 px-4 rounded-xl shadow transition text-xs cursor-pointer">
-                    🔄 Putar Roda
-                </button>
-                <button onclick="resetWheels()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 px-4 rounded-xl transition text-xs cursor-pointer">
-                    Reset
-                </button>
-            </div>
-        </div>
-
-        <!-- Sisi Kanan: Hasil & Panduan Metode ARKA -->
-        <div class="bg-white p-5 rounded-2xl shadow-lg border border-slate-100 w-full md:w-1/2 flex flex-col justify-between">
-            <div>
-                <h2 class="text-sm font-bold text-slate-700 mb-3 border-b pb-2">📋 Hasil Analisis Tantangan</h2>
-                
-                <div class="space-y-2.5 mb-4">
-                    <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-100">
-                        <span class="text-[10px] font-bold text-indigo-600 uppercase tracking-wider block">Situasi Pemicu (Ring Luar):</span>
-                        <p id="resultOuter" class="text-xs text-indigo-950 font-semibold mt-0.5">Klik 'Putar Roda' untuk memulai...</p>
-                    </div>
-
-                    <div class="bg-amber-50 p-3 rounded-xl border border-amber-100">
-                        <span class="text-[10px] font-bold text-amber-600 uppercase tracking-wider block">Teknik Pengelolaan (Ring Dalam):</span>
-                        <p id="resultInner" class="text-xs text-amber-950 font-semibold mt-0.5">Klik 'Putar Roda' untuk memulai...</p>
-                    </div>
-                </div>
-
-                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <h3 class="text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-1">Panduan Metode ARKA:</h3>
-                    <ul class="text-[11px] text-slate-600 space-y-1 list-disc list-inside">
-                        <li><strong>Aktivitas:</strong> Pelajari situasi pemicu yang didapat.</li>
-                        <li><strong>Refleksi:</strong> Ceritakan pengalaman serupa yang dialami.</li>
-                        <li><strong>Konseptualisasi:</strong> Pahami cara kerja teknik coping-nya.</li>
-                        <li><strong>Aplikasi:</strong> Tulis komitmen aksi nyata di LKPD.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="mt-3 pt-2 border-t text-center">
-                <span class="text-[10px] text-slate-400">Media Bimbingan Konseling SMAN 6 Banjarmasin</span>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-white border-t py-2 text-center text-[10px] text-slate-500">
-        <p>Wemoction Web App &copy; 2026 — Layanan BK</p>
-    </footer>
-
-    <!-- JavaScript Interaksi Roda Putar -->
-    <script>
-        const outerOptions = [
-            "1. Mendapat Kritik/Komentar Negatif di Circle Pertemanan",
-            "2. Gagal atau Mendapat Nilai Ujian di Bawah Harapan",
-            "3. Salah Paham atau Berkonflik dengan Orang Tua di Rumah",
-            "4. Merasa Diabaikan atau Dikucilkan dalam Kelompok",
-            "5. Frustrasi karena Tugas Menumpuk dan Tenggat Waktu (Deadline)",
-            "6. Merasa Insecure Melihat Pencapaian Orang Lain di Medsos"
-        ];
-
-        const innerOptions = [
-            "1. STOP & Pause: Jeda & Ambil Napas Dalam 3 Kali",
-            "2. Labeling the Emotion: Kenali & Sebutkan Nama Emosinya",
-            "3. Cognitive Reframing: Ubah Pikiran Negatif Jadi Rasional",
-            "4. Physical Release: Salurkan Energi Lewat Olahraga/Jurnal",
-            "5. Assertive Communication: Sampaikan Pakai Kalimat 'Aku Merasa...'",
-            "6. Grounding / Mindfulness: Fokus Panca Indra Saat Ini"
-        ];
-
-        let outerRotation = 0;
-        let innerRotation = 0;
-
-        function spinWheels() {
-            document.getElementById('statusText').innerText = "PUTAR...";
-            
-            const randomOuterSpin = Math.floor(Math.random() * 360) + 1440;
-            const randomInnerSpin = Math.floor(Math.random() * 360) + 2160;
-
-            outerRotation += randomOuterSpin;
-            innerRotation += randomInnerSpin;
-
-            document.getElementById('outerRing').style.transform = `rotate(${outerRotation}deg)`;
-            document.getElementById('innerRing').style.transform = `rotate(${innerRotation}deg)`;
-
-            setTimeout(() => {
-                const outerIndex = Math.floor(((outerRotation % 360) / 360) * outerOptions.length);
-                const innerIndex = Math.floor(((innerRotation % 360) / 360) * innerOptions.length);
-
-                const selectedOuter = outerOptions[(outerOptions.length - (outerIndex % outerOptions.length)) % outerOptions.length];
-                const selectedInner = innerOptions[(innerOptions.length - (innerIndex % innerOptions.length)) % innerOptions.length];
-
-                document.getElementById('statusText').innerText = "SIAP!";
-                document.getElementById('resultOuter').innerText = selectedOuter;
-                document.getElementById('resultInner').innerText = selectedInner;
-            }, 4000);
-        }
-
-        function resetWheels() {
-            outerRotation = 0;
-            innerRotation = 0;
-            document.getElementById('outerRing').style.transform = `rotate(0deg)`;
-            document.getElementById('innerRing').style.transform = `rotate(0deg)`;
-            document.getElementById('statusText').innerText = "PUTAR";
-            document.getElementById('resultOuter').innerText = "Klik 'Putar Roda' untuk memulai...";
-            document.getElementById('resultInner').innerText = "Klik 'Putar Roda' untuk memulai...";
-        }
-    </script>
-</body>
-</html>
+            <!-- Ring Dalam -->
+            <div id="innerRing" class="ring">
+                <div class="slice-content" style="transform: rotate(30deg);"><div class="mt-1.5 text-center text-slate-700 font-bold text-[8px] leading-none"><i class="fa-solid fa-lungs text-[10px] block mb-0.5 text-indigo-500"></i>STOP & Pause<br><span class="text-[7px] text-slate-500 font-normal">Jeda Napas</span></div></div>
+                <div class="slice-content" style="transform: rotate(90deg);"><div class="mt-1.5 text-center text-slate-700 font-bold text-[8px] leading-none"><i class="fa-solid fa-brain text-[10px] block mb-0.5 text-amber-500"></i>Labeling<br>Emotion</div></div>
+                <div class="slice-content" style="transform: rotate(150deg);"><div class="mt-1.5 text-center text-slate-700 font-bold text-[8px] leading-none"><i class="fa-solid fa-comments text-[10px] block mb-0.5 text-emerald-600"></i>CARA<br>Communication</div></div>
+                <div class="slice-content" style="transform: rotate(210deg);"><div class="mt-1.5 text-center text-slate-700 font-bold text-[8px] leading-none"><i class="fa-solid fa-heart text-[10px] block mb-0.5 text-rose-500"></i>Self-<br>Compassion</div></div>
+                <div class="slice-content" style="transform: rotate(27
