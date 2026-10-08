@@ -3,259 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wemoction - Dual Spin Wheels (ARKA)</title>
+    <title>Game BK: Wemoction ARKA (Desktop)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .wheel-container {
-            position: relative;
-            width: 280px;
-            height: 280px;
-            margin: 0 auto;
-        }
-        @media(min-width: 1024px) {
-            .wheel-container {
-                width: 340px;
-                height: 340px;
-            }
-        }
-        .wheel-ring {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            border-radius: 50%;
-            transition: transform 4s cubic-bezier(0.15, 0.9, 0.2, 1);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-        /* Roda 1: Situasi Pemicu (Luar) */
-        #outerWheel {
-            background: conic-gradient(
-                #ffb3ba 0deg 60deg,
-                #ffdfba 60deg 120deg,
-                #baffc9 120deg 180deg,
-                #bae1ff 180deg 240deg,
-                #ffc6ff 240deg 300deg,
-                #e8baff 300deg 360deg
-            );
-            border: 6px solid #ffffff;
-            z-index: 1;
-        }
-        /* Roda 2: Jurus ARKA (Dalam) */
-        #innerWheel {
-            background: conic-gradient(
-                #f8fafc 0deg 60deg,
-                #fff7ed 60deg 120deg,
-                #f0fdf4 120deg 180deg,
-                #eff6ff 180deg 240deg,
-                #faf5ff 240deg 300deg,
-                #fdf2f8 300deg 360deg
-            );
-            border: 6px solid #ffffff;
-            z-index: 1;
+        .wheel-container { position: relative; width: 320px; height: 320px; margin: 0 auto; }
+        @media(min-width: 1024px) { .wheel-container { width: 600px; height: 600px; } }
+        
+        /* Lapisan Piringan Warna yang Berputar */
+        .ring-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; transition: transform 4s cubic-bezier(0.15, 0.9, 0.2, 1); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+        
+        #outerBg { background: conic-gradient(#ffb3ba 0deg 60deg, #ffdfba 60deg 120deg, #baffc9 120deg 180deg, #bae1ff 180deg 240deg, #ffc6ff 240deg 300deg, #e8baff 300deg 360deg); border: 6px solid #ffffff; }
+        #innerBg { top: 18%; left: 18%; width: 64%; height: 64%; background: conic-gradient(#f8fafc 0deg 60deg, #fff7ed 60deg 120deg, #f0fdf4 120deg 180deg, #eff6ff 180deg 240deg, #faf5ff 240deg 300deg, #fdf2f8 300deg 360deg); border: 5px solid #ffffff; z-index: 5; }
+
+        /* Lapisan Teks & Ikon Statis di Atas Piringan */
+        .text-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 15; }
+        
+        .slice-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: flex-start; transform-origin: 50% 50%; }
+        
+        .label-box { display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .outer-label { padding-top: 5%; width: 110px; }
+        .inner-label { padding-top: 15%; width: 90px; }
+        @media(min-width: 1024px) { 
+            .outer-label { padding-top: 5%; width: 180px; } 
+            .inner-label { padding-top: 16%; width: 140px; } 
         }
 
-        .text-layer {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 20;
-        }
-        .slice-text {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            transform-origin: 50% 50%;
-        }
-        .label-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-        .label-style { padding-top: 8%; width: 110px; }
-        @media(min-width: 1024px) {
-            .label-style { padding-top: 8%; width: 130px; }
-        }
-
-        /* Tombol Poros Tengah */
-        .center-pin {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 26%; height: 26%;
-            background: radial-gradient(circle, #ffffff 0%, #cbd5e1 100%);
-            border-radius: 50%;
-            z-index: 50;
-            border: 5px solid #1b4965;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #0f2c59;
-            font-size: 0.85rem;
-            font-weight: 900;
-            cursor: pointer;
-            pointer-events: auto;
-            transition: transform 0.1s;
-        }
-        .center-pin:active {
-            transform: translate(-50%, -50%) scale(0.95);
-        }
-        @media(min-width: 1024px) {
-            .center-pin { font-size: 1.1rem; border: 6px solid #1b4965; }
-        }
-
-        @keyframes popIn {
-            0% { opacity: 0; transform: scale(0.95); }
-            100% { opacity: 1; transform: scale(1); }
-        }
+        .center-pin { position: absolute; top: 41%; left: 41%; width: 18%; height: 18%; background: radial-gradient(circle, #cbd5e1 0%, #64748b 100%); border-radius: 50%; z-index: 50; border: 5px solid #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; color: white; font-size: 1.2rem; font-weight: 900; letter-spacing: 2px; cursor: pointer; pointer-events: auto; transition: transform 0.1s; }
+        .center-pin:active { transform: scale(0.95); }
+        @media(min-width: 1024px) { .center-pin { font-size: 2rem; border: 8px solid #ffffff; } }
+        
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
         .game-card { animation: popIn 0.5s ease-out forwards; }
     </style>
 </head>
 <body class="bg-[#a8e6cf] text-slate-800 min-h-screen flex flex-col font-sans overflow-x-hidden">
 
-    <!-- Header Atas -->
-    <header class="bg-white/70 backdrop-blur-md py-3 px-6 shadow-sm border-b border-white/50 flex justify-between items-center w-full z-50">
+    <header class="bg-white/60 backdrop-blur-md py-4 px-8 shadow-sm border-b border-white/50 flex justify-between items-center w-full relative z-50">
         <div>
-            <h1 class="text-xl lg:text-2xl font-black text-[#0f2c59] tracking-tight">WHEEL OF EMOTION (WEMOCTION)</h1>
-            <p class="text-xs lg:text-sm font-bold text-[#1b4965]">🎮 MEDIA BK: DUAL SPIN WHEEL (METODE ARKA)</p>
+            <h1 class="text-3xl font-black text-[#0f2c59] tracking-tight">WHEEL OF EMOTION (WEMOCTION)</h1>
+            <p class="text-lg font-bold text-[#1b4965] mt-1">🎮 GAME KELOLA EMOSI METODE ARKA</p>
         </div>
-        <div class="hidden lg:flex bg-[#0f2c59] text-white font-bold text-sm px-4 py-1.5 rounded-xl shadow-md items-center gap-2">
-            <i class="fa-solid fa-school text-amber-300"></i> SMAN 6 Banjarmasin
+        <div class="hidden lg:flex bg-[#0f2c59] text-white font-bold text-lg px-6 py-2.5 rounded-xl shadow-md items-center gap-3">
+            <i class="fa-solid fa-school text-amber-300"></i> BK SMAN 6 Banjarmasin
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="w-full max-w-[1600px] mx-auto px-4 py-6 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+    <main class="w-full max-w-[1600px] mx-auto px-6 py-10 flex-grow grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center relative z-10">
         
-        <!-- BAGIAN KIRI: 2 Roda Terpisah (Lebar 7 Kolom) -->
-        <div class="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-white/50 backdrop-blur-sm p-6 rounded-[2.5rem] shadow-xl border-2 border-white">
-            
-            <!-- RODA 1: Situasi Pemicu -->
-            <div class="flex flex-col items-center">
-                <h3 class="font-extrabold text-[#0f2c59] text-base lg:text-lg mb-3 flex items-center gap-2">
-                    <span class="w-7 h-7 bg-red-500 text-white rounded-full flex items-center justify-center text-sm shadow">1</span> Roda Pemicu
-                </h3>
-                <div class="wheel-container">
-                    <!-- Jarum Merah Roda 1 -->
-                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 z-40 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[22px] border-t-red-600 drop-shadow-md pointer-events-none"></div>
+        <!-- KOLOM KIRI: Roda -->
+        <div class="flex flex-col items-center w-full relative z-20">
+            <div class="wheel-container">
+                <!-- Jarum Penunjuk Merah di Atas -->
+                <div class="absolute -top-6 lg:-top-10 left-1/2 -translate-x-1/2 z-40 w-0 h-0 border-l-[15px] lg:border-l-[25px] border-l-transparent border-r-[15px] lg:border-r-[25px] border-r-transparent border-t-[30px] lg:border-t-[50px] border-t-red-600 drop-shadow-xl pointer-events-none"></div>
 
-                    <!-- Piringan Roda 1 -->
-                    <div id="outerWheel" class="wheel-ring"></div>
+                <!-- 1. Piringan Warna Luar (Berputar) -->
+                <div id="outerBg" class="ring-bg"></div>
+                <!-- 2. Piringan Warna Dalam (Berputar) -->
+                <div id="innerBg" class="ring-bg"></div>
 
-                    <!-- Teks Roda 1 -->
-                    <div class="text-layer">
-                        <div class="slice-text" style="transform: rotate(30deg);"><div class="label-box label-style" style="transform: rotate(-30deg);"><i class="fa-solid fa-face-angry text-base text-red-600 mb-0.5"></i><span class="font-extrabold text-[8px] lg:text-[11px] leading-tight text-slate-800">Kritik / Bully</span></div></div>
-                        <div class="slice-text" style="transform: rotate(90deg);"><div class="label-box label-style" style="transform: rotate(-90deg);"><i class="fa-solid fa-file-xmark text-base text-amber-600 mb-0.5"></i><span class="font-extrabold text-[8px] lg:text-[11px] leading-tight text-slate-800">Gagal Ujian</span></div></div>
-                        <div class="slice-text" style="transform: rotate(150deg);"><div class="label-box label-style" style="transform: rotate(-150deg);"><i class="fa-solid fa-people-arrows text-base text-emerald-700 mb-0.5"></i><span class="font-extrabold text-[8px] lg:text-[11px] leading-tight text-slate-800">Konflik Keluarga</span></div></div>
-                        <div class="slice-text" style="transform: rotate(210deg);"><div class="label-box label-style" style="transform: rotate(-210deg);"><i class="fa-solid fa-user-slash text-base text-sky-700 mb-0.5"></i><span class="font-extrabold text-[8px] lg:text-[11px] leading-tight text-slate-800">Dikucilkan</span></div></div>
-                        <div class="slice-text" style="transform: rotate(270deg);"><div class="label-box label-style" style="transform: rotate(-270deg);"><i class="fa-solid fa-layer-group text-base text-purple-700 mb-0.5"></i><span class="font-extrabold text-[8px] lg:text-[11px] leading-tight text-slate-800">Frustrasi Tugas</span></div></div>
-                        <div class="slice-text" style="transform: rotate(330deg);"><div class="label-box label-style" style="transform: rotate(-330deg);"><i class="fa-solid fa-mobile-screen-button text-base text-pink-600 mb-0.5"></i><span class="font-extrabold text-[8px] lg:text-[11px] leading-tight text-slate-800">Insecure Medsos</span></div></div>
-                    </div>
+                <!-- 3. Lapisan Teks Statis (Mengunci posisi sudut juring melingkar) -->
+                <div class="text-layer">
+                    <!-- Ring Luar -->
+                    <div class="slice-text" style="transform: rotate(30deg);"><div class="label-box outer-label" style="transform: rotate(90deg);"><i class="fa-solid fa-face-angry text-base lg:text-3xl mb-1 text-red-600"></i><span class="font-extrabold text-[10px] lg:text-[15px] leading-tight">Kritik / Bully</span></div></div>
+                    <div class="slice-text" style="transform: rotate(90deg);"><div class="label-box outer-label" style="transform: rotate(90deg);"><i class="fa-solid fa-file-xmark text-base lg:text-3xl mb-1 text-amber-600"></i><span class="font-extrabold text-[10px] lg:text-[15px] leading-tight">Gagal Ujian</span></div></div>
+                    <div class="slice-text" style="transform: rotate(150deg);"><div class="label-box outer-label" style="transform: rotate(90deg);"><i class="fa-solid fa-people-arrows text-base lg:text-3xl mb-1 text-emerald-700"></i><span class="font-extrabold text-[10px] lg:text-[15px] leading-tight">Konflik Keluarga</span></div></div>
+                    <div class="slice-text" style="transform: rotate(210deg);"><div class="label-box outer-label" style="transform: rotate(90deg);"><i class="fa-solid fa-user-slash text-base lg:text-3xl mb-1 text-sky-700"></i><span class="font-extrabold text-[10px] lg:text-[15px] leading-tight">Dikucilkan</span></div></div>
+                    <div class="slice-text" style="transform: rotate(270deg);"><div class="label-box outer-label" style="transform: rotate(90deg);"><i class="fa-solid fa-layer-group text-base lg:text-3xl mb-1 text-purple-700"></i><span class="font-extrabold text-[10px] lg:text-[15px] leading-tight">Frustrasi Tugas</span></div></div>
+                    <div class="slice-text" style="transform: rotate(330deg);"><div class="label-box outer-label" style="transform: rotate(90deg);"><i class="fa-solid fa-mobile-screen-button text-base lg:text-3xl mb-1 text-pink-600"></i><span class="font-extrabold text-[10px] lg:text-[15px] leading-tight">Insecure Medsos</span></div></div>
 
-                    <!-- Tombol Putar Roda 1 -->
-                    <div class="center-pin" onclick="spinOuter()">PUTAR</div>
+                    <!-- Ring Dalam -->
+                    <div class="slice-text" style="transform: rotate(30deg);"><div class="label-box inner-label" style="transform: rotate(90deg);"><i class="fa-solid fa-lungs text-[12px] lg:text-xl mb-0.5 text-indigo-600"></i><span class="font-bold text-[8px] lg:text-[12px] leading-tight">STOP & Pause</span></div></div>
+                    <div class="slice-text" style="transform: rotate(90deg);"><div class="label-box inner-label" style="transform: rotate(90deg);"><i class="fa-solid fa-brain text-[12px] lg:text-xl mb-0.5 text-amber-600"></i><span class="font-bold text-[8px] lg:text-[12px] leading-tight">Labeling Emotion</span></div></div>
+                    <div class="slice-text" style="transform: rotate(150deg);"><div class="label-box inner-label" style="transform: rotate(90deg);"><i class="fa-solid fa-comments text-[12px] lg:text-xl mb-0.5 text-emerald-600"></i><span class="font-bold text-[8px] lg:text-[12px] leading-tight">CARA Comm.</span></div></div>
+                    <div class="slice-text" style="transform: rotate(210deg);"><div class="label-box inner-label" style="transform: rotate(90deg);"><i class="fa-solid fa-heart text-[12px] lg:text-xl mb-0.5 text-rose-600"></i><span class="font-bold text-[8px] lg:text-[12px] leading-tight">Self Compassion</span></div></div>
+                    <div class="slice-text" style="transform: rotate(270deg);"><div class="label-box inner-label" style="transform: rotate(90deg);"><i class="fa-solid fa-list-check text-[12px] lg:text-xl mb-0.5 text-purple-600"></i><span class="font-bold text-[8px] lg:text-[12px] leading-tight">Break It Down</span></div></div>
+                    <div class="slice-text" style="transform: rotate(330deg);"><div class="label-box inner-label" style="transform: rotate(90deg);"><i class="fa-solid fa-sun text-[12px] lg:text-xl mb-0.5 text-sky-600"></i><span class="font-bold text-[8px] lg:text-[12px] leading-tight">Reality Check</span></div></div>
                 </div>
-                <button onclick="spinOuter()" class="mt-4 bg-red-500 hover:bg-red-600 active:scale-95 text-white font-bold py-2.5 px-5 rounded-xl shadow-md transition text-xs lg:text-sm uppercase tracking-wider cursor-pointer">
-                    <i class="fa-solid fa-play mr-1"></i> Putar Pemicu
-                </button>
+
+                <!-- Tombol Putar Tengah -->
+                <div class="center-pin" id="centerPin" onclick="spinWheels()">TAP!</div>
             </div>
 
-            <!-- RODA 2: Jurus ARKA -->
-            <div class="flex flex-col items-center">
-                <h3 class="font-extrabold text-[#0f2c59] text-base lg:text-lg mb-3 flex items-center gap-2">
-                    <span class="w-7 h-7 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm shadow">2</span> Roda Jurus
-                </h3>
-                <div class="wheel-container">
-                    <!-- Jarum Merah Roda 2 -->
-                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 z-40 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[22px] border-t-red-600 drop-shadow-md pointer-events-none"></div>
-
-                    <!-- Piringan Roda 2 -->
-                    <div id="innerWheel" class="wheel-ring"></div>
-
-                    <!-- Teks Roda 2 -->
-                    <div class="text-layer">
-                        <div class="slice-text" style="transform: rotate(30deg);"><div class="label-box label-style" style="transform: rotate(-30deg);"><i class="fa-solid fa-lungs text-base text-indigo-600 mb-0.5"></i><span class="font-bold text-[7px] lg:text-[10px] leading-tight text-slate-700">STOP & Pause</span></div></div>
-                        <div class="slice-text" style="transform: rotate(90deg);"><div class="label-box label-style" style="transform: rotate(-90deg);"><i class="fa-solid fa-brain text-base text-amber-600 mb-0.5"></i><span class="font-bold text-[7px] lg:text-[10px] leading-tight text-slate-700">Labeling Emotion</span></div></div>
-                        <div class="slice-text" style="transform: rotate(150deg);"><div class="label-box label-style" style="transform: rotate(-150deg);"><i class="fa-solid fa-comments text-base text-emerald-600 mb-0.5"></i><span class="font-bold text-[7px] lg:text-[10px] leading-tight text-slate-700">CARA Comm.</span></div></div>
-                        <div class="slice-text" style="transform: rotate(210deg);"><div class="label-box label-style" style="transform: rotate(-210deg);"><i class="fa-solid fa-heart text-base text-rose-600 mb-0.5"></i><span class="font-bold text-[7px] lg:text-[10px] leading-tight text-slate-700">Self Compassion</span></div></div>
-                        <div class="slice-text" style="transform: rotate(270deg);"><div class="label-box label-style" style="transform: rotate(-270deg);"><i class="fa-solid fa-list-check text-base text-purple-600 mb-0.5"></i><span class="font-bold text-[7px] lg:text-[10px] leading-tight text-slate-700">Break It Down</span></div></div>
-                        <div class="slice-text" style="transform: rotate(330deg);"><div class="label-box label-style" style="transform: rotate(-330deg);"><i class="fa-solid fa-sun text-base text-sky-600 mb-0.5"></i><span class="font-bold text-[7px] lg:text-[10px] leading-tight text-slate-700">Reality Check</span></div></div>
-                    </div>
-
-                    <!-- Tombol Putar Roda 2 -->
-                    <div class="center-pin" onclick="spinInner()">PUTAR</div>
-                </div>
-                <button onclick="spinInner()" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold py-2.5 px-5 rounded-xl shadow-md transition text-xs lg:text-sm uppercase tracking-wider cursor-pointer">
-                    <i class="fa-solid fa-play mr-1"></i> Putar Jurus
+            <!-- Tombol Aksi Bawah Roda -->
+            <div class="flex gap-4 w-full max-w-[600px] mt-10 lg:mt-14 relative z-50">
+                <button onclick="spinWheels()" class="flex-1 bg-red-500 hover:bg-red-600 active:scale-95 text-white font-black py-4 lg:py-5 px-6 rounded-2xl shadow-xl transition text-lg lg:text-2xl tracking-widest uppercase flex items-center justify-center cursor-pointer">
+                    <i class="fa-solid fa-play mr-3 pointer-events-none"></i> PUTAR RODA
+                </button>
+                <button onclick="resetGame()" class="bg-white hover:bg-slate-100 active:scale-95 text-slate-700 font-bold py-4 lg:py-5 px-6 lg:px-8 rounded-2xl shadow-lg border-2 border-slate-200 transition text-lg lg:text-2xl cursor-pointer">
+                    <i class="fa-solid fa-rotate-right pointer-events-none"></i>
                 </button>
             </div>
-
         </div>
 
-        <!-- BAGIAN KANAN: Panel Misi & Reset (Lebar 5 Kolom) -->
-        <div class="lg:col-span-5 flex flex-col justify-center h-full">
-            
-            <div id="standbyPanel" class="w-full bg-white/80 backdrop-blur-md rounded-[2rem] p-8 shadow-xl border-4 border-white text-center flex flex-col items-center justify-center min-h-[380px]">
-                <div class="w-20 h-20 bg-[#1b4965] rounded-full text-white flex items-center justify-center text-4xl mb-4 animate-bounce shadow-lg">
+        <!-- KOLOM KANAN: Panel Misi -->
+        <div class="w-full flex flex-col justify-center h-full min-h-[500px] relative z-20">
+            <div id="standbyPanel" class="w-full bg-white/70 backdrop-blur-md rounded-[2rem] p-10 shadow-xl border-4 border-white text-center flex flex-col items-center justify-center h-full">
+                <div class="w-28 h-28 bg-[#1b4965] rounded-full text-white flex items-center justify-center text-6xl mb-8 animate-bounce shadow-lg">
                     <i class="fa-regular fa-hand-pointer"></i>
                 </div>
-                <h3 class="text-xl lg:text-2xl font-black text-[#0f2c59] mb-2">Putar Kedua Roda!</h3>
-                <p class="text-slate-600 font-medium text-sm lg:text-base leading-relaxed">
-                    Putar <b>Roda Pemicu</b> di kiri dan <b>Roda Jurus</b> di kanan untuk mengkombinasikan skenario penanganan emosi hari ini.
+                <h3 class="text-3xl lg:text-4xl font-black text-[#0f2c59] mb-4">Siap Dimainkan!</h3>
+                <p class="text-slate-600 font-medium text-xl lg:text-2xl leading-relaxed max-w-lg">
+                    Tekan tombol <b class="text-red-500">PUTAR RODA</b> di sebelah kiri untuk mendapatkan <b>Misi Pengelolaan Emosi</b> hari ini.
                 </p>
-                <button onclick="spinBoth()" class="mt-6 bg-[#1b4965] hover:bg-[#0f2c59] text-white font-black py-3 px-6 rounded-xl shadow-lg transition text-sm uppercase tracking-wider cursor-pointer">
-                    <i class="fa-solid fa-dice mr-2"></i> Putar Sekaligus
-                </button>
             </div>
 
-            <div id="arkaMission" class="w-full hidden game-card flex flex-col">
-                <div class="bg-[#1b4965] text-white p-4 rounded-t-[1.5rem] flex justify-between items-center shadow-lg border-b-4 border-amber-400">
-                    <span class="font-black tracking-wider text-base lg:text-lg"><i class="fa-solid fa-bullseye text-amber-400 mr-2"></i> MISI ARKA KAMU!</span>
-                    <button onclick="resetAll()" class="text-xs bg-white/20 hover:bg-white/30 text-white font-bold py-1 px-3 rounded-lg transition">Reset</button>
+            <div id="arkaMission" class="w-full hidden game-card h-full flex-col">
+                <div class="bg-[#1b4965] text-white p-6 rounded-t-[2rem] flex justify-between items-center shadow-lg border-b-[8px] border-amber-400">
+                    <span class="font-black tracking-widest text-xl lg:text-3xl"><i class="fa-solid fa-bullseye text-amber-400 mr-3"></i> MISI ARKA KAMU!</span>
+                    <span class="bg-amber-400 text-[#1b4965] text-xs lg:text-base font-black px-4 py-1.5 rounded-full shadow-sm uppercase">Tantangan Aktif</span>
                 </div>
                 
-                <div class="bg-white p-5 rounded-b-[1.5rem] shadow-xl border-4 border-t-0 border-[#1b4965] flex flex-col space-y-3">
-                    
-                    <div class="flex gap-3 items-start bg-red-50 p-3 rounded-xl border border-red-100">
-                        <div class="bg-red-500 text-white font-black text-sm w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0 shadow">A</div>
+                <div class="bg-white p-8 lg:p-10 rounded-b-[2rem] shadow-2xl border-4 border-t-0 border-[#1b4965] flex-grow flex flex-col justify-center space-y-6 lg:space-y-8">
+                    <div class="flex gap-5 items-start bg-red-50 p-5 rounded-2xl border-2 border-red-100">
+                        <div class="bg-red-500 text-white font-black text-2xl w-14 h-14 flex items-center justify-center rounded-2xl flex-shrink-0 shadow-md">A</div>
                         <div>
-                            <h4 class="text-xs lg:text-sm font-black text-red-700 uppercase">Aktivitas (Pemicu)</h4>
-                            <p id="arkaA" class="text-xs lg:text-sm text-slate-700 mt-0.5 font-semibold leading-snug"></p>
+                            <h4 class="text-lg lg:text-xl font-black text-red-700 uppercase tracking-wide">Aktivitas (Pemicu)</h4>
+                            <p id="arkaA" class="text-base lg:text-xl text-slate-700 mt-2 font-semibold leading-relaxed"></p>
                         </div>
                     </div>
 
-                    <div class="flex gap-3 items-start bg-amber-50 p-3 rounded-xl border border-amber-100">
-                        <div class="bg-amber-500 text-white font-black text-sm w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0 shadow">R</div>
+                    <div class="flex gap-5 items-start bg-amber-50 p-5 rounded-2xl border-2 border-amber-100">
+                        <div class="bg-amber-500 text-white font-black text-2xl w-14 h-14 flex items-center justify-center rounded-2xl flex-shrink-0 shadow-md">R</div>
                         <div>
-                            <h4 class="text-xs lg:text-sm font-black text-amber-700 uppercase">Refleksi Diri</h4>
-                            <p class="text-xs lg:text-sm text-slate-700 mt-0.5 font-medium leading-snug">Apa emosi pertama yang muncul di hatimu saat situasi tersebut terjadi?</p>
+                            <h4 class="text-lg lg:text-xl font-black text-amber-700 uppercase tracking-wide">Refleksi Diri</h4>
+                            <p class="text-base lg:text-xl text-slate-700 mt-2 font-medium leading-relaxed">Apa emosi pertama yang muncul di hatimu saat situasi tersebut terjadi? <i class="text-amber-800 font-semibold">(Marah, sedih, kecewa, atau panik?)</i></p>
                         </div>
                     </div>
 
-                    <div class="flex gap-3 items-start bg-emerald-50 p-3 rounded-xl border border-emerald-100">
-                        <div class="bg-emerald-500 text-white font-black text-sm w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0 shadow">K</div>
+                    <div class="flex gap-5 items-start bg-emerald-50 p-5 rounded-2xl border-2 border-emerald-100">
+                        <div class="bg-emerald-500 text-white font-black text-2xl w-14 h-14 flex items-center justify-center rounded-2xl flex-shrink-0 shadow-md">K</div>
                         <div>
-                            <h4 class="text-xs lg:text-sm font-black text-emerald-700 uppercase">Konseptualisasi (Jurus)</h4>
-                            <p id="arkaK" class="text-xs lg:text-sm text-slate-700 mt-0.5 font-semibold leading-snug"></p>
+                            <h4 class="text-lg lg:text-xl font-black text-emerald-700 uppercase tracking-wide">Konseptualisasi (Jurus)</h4>
+                            <p id="arkaK" class="text-base lg:text-xl text-slate-700 mt-2 font-semibold leading-relaxed"></p>
                         </div>
                     </div>
 
-                    <div class="flex gap-3 items-start bg-blue-50 p-3 rounded-xl border border-blue-100">
-                        <div class="bg-blue-600 text-white font-black text-sm w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0 shadow">A</div>
+                    <div class="flex gap-5 items-start bg-blue-50 p-5 rounded-2xl border-2 border-blue-100">
+                        <div class="bg-blue-600 text-white font-black text-2xl w-14 h-14 flex items-center justify-center rounded-2xl flex-shrink-0 shadow-md">A</div>
                         <div>
-                            <h4 class="text-xs lg:text-sm font-black text-blue-800 uppercase">Aplikasi (Komitmen)</h4>
-                            <p class="text-xs lg:text-sm text-slate-700 mt-0.5 font-medium leading-snug">"Mulai sekarang, jika menghadapi situasi ini, saya akan menerapkan jurus tersebut."</p>
+                            <h4 class="text-lg lg:text-xl font-black text-blue-800 uppercase tracking-wide">Aplikasi (Tindakan)</h4>
+                            <p class="text-base lg:text-xl text-slate-700 mt-2 font-medium leading-relaxed">Tulis komitmenmu di LKPD: <br><b class="text-blue-700">"Mulai sekarang, jika saya menghadapi situasi ini, saya akan menggunakan jurus tersebut."</b></p>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </main>
 
-    <!-- JavaScript Logika Dual Wheel -->
     <script>
         const outerData = [
             "Kritik / Bully: Ada teman yang memberikan komentar negatif, nyinyir, atau mengejekmu di sekolah maupun di grup chat.",
@@ -267,78 +162,77 @@
         ];
 
         const innerData = [
-            "Jurus STOP & Pause: Berhenti sejenak dari aktivitasmu. Ambil napas dalam 3 kali untuk menenangkan sistem saraf.",
-            "Jurus Labeling Emotion: Sadari dan akui emosimu. Katakan dalam hati: 'Oke, aku sedang merasa kecewa', lalu terima perasaannya.",
-            "Jurus CARA Communication: Gunakan komunikasi asertif. Dengarkan dengan tenang, lalu sampaikan perasaanmu dengan santun.",
-            "Jurus Self-Compassion: Berbaik hatilah pada dirimu sendiri. Rangkul dirimu dan sadari bahwa kamu tetap berharga.",
-            "Jurus Break It Down: Jangan panik. Pecah tugasmu menjadi langkah-langkah kecil, lalu kerjakan satu per satu secara bertahap.",
-            "Jurus Reality Check: Filter pikiran negatifmu. Fokus pada proses perkembangan dirimu sendiri, bukan pada standar orang lain."
+            "Jurus STOP & Pause: Berhenti sejenak dari apapun yang kamu lakukan. Ambil napas dalam 3 kali untuk menenangkan saraf.",
+            "Jurus Labeling Emotion: Sadari emosimu. Katakan: 'Oke, aku sadar aku sedang merasa marah/cemas saat ini', lalu terima perasaan itu.",
+            "Jurus CARA Communication: Gunakan komunikasi asertif. Tatap matanya, dengarkan, dan sampaikan perasaanmu menggunakan kata 'Aku merasa...'.",
+            "Jurus Self-Compassion: Berbaik hatilah pada dirimu sendiri. Rangkul dirimu dan katakan: 'Tidak apa-apa untuk merasa gagal sesekali'.",
+            "Jurus Break It Down: Jangan panik. Ambil kertas, pecah masalahmu menjadi 3 langkah kecil yang paling mudah, lalu kerjakan yang pertama saja.",
+            "Jurus Reality Check: Filter pikiran negatifmu. Tanyakan: 'Apakah ketakutan ini adalah fakta, atau hanya sekadar asumsi berlebihan?'"
         ];
 
         let outerRotation = 0;
         let innerRotation = 0;
-        let lastOuterIndex = 0;
-        let lastInnerIndex = 0;
-        let isSpinningOuter = false;
-        let isSpinningInner = false;
+        let isSpinning = false;
 
-        function updateMissionDisplay() {
-            document.getElementById('arkaA').innerText = outerData[lastOuterIndex];
-            document.getElementById('arkaK').innerText = innerData[lastInnerIndex];
-            document.getElementById('standbyPanel').classList.add('hidden');
-            document.getElementById('arkaMission').classList.remove('hidden');
-        }
+        function spinWheels() {
+            if(isSpinning) return;
+            isSpinning = true;
 
-        function spinOuter() {
-            if(isSpinningOuter) return;
-            isSpinningOuter = true;
+            document.getElementById('arkaMission').classList.add('hidden');
+            document.getElementById('standbyPanel').classList.remove('hidden');
+            document.getElementById('standbyPanel').innerHTML = `
+                <div class="w-28 h-28 bg-amber-400 rounded-full text-[#1b4965] flex items-center justify-center text-6xl mb-8 animate-spin shadow-lg">
+                    <i class="fa-solid fa-spinner"></i>
+                </div>
+                <h3 class="text-3xl lg:text-4xl font-black text-[#0f2c59] mb-4">Menganalisis Emosi...</h3>
+                <p class="text-slate-600 font-medium text-xl lg:text-2xl max-w-lg">Roda sedang berputar untuk menentukan tantanganmu!</p>
+            `;
+            document.getElementById('centerPin').innerText = "WAIT";
 
-            const selectedIndex = Math.floor(Math.random() * 6);
-            lastOuterIndex = selectedIndex;
+            const outerIndex = Math.floor(Math.random() * 6);
+            const innerIndex = Math.floor(Math.random() * 6);
 
-            const targetDeg = 360 - (30 + (selectedIndex * 60));
-            outerRotation = (Math.floor(outerRotation / 360) * 360) + (5 * 360) + targetDeg;
+            // Perhitungan agar jarum merah tepat menunjuk lurus ke tengah juring
+            const targetOuterDeg = 360 - (30 + (outerIndex * 60));
+            const targetInnerDeg = 360 - (30 + (innerIndex * 60));
 
-            document.getElementById('outerWheel').style.transform = `rotate(${outerRotation}deg)`;
+            outerRotation = (Math.floor(outerRotation / 360) * 360) + (5 * 360) + targetOuterDeg;
+            innerRotation = (Math.floor(innerRotation / 360) * 360) + (7 * 360) + targetInnerDeg;
+
+            document.getElementById('outerBg').style.transform = `rotate(${outerRotation}deg)`;
+            document.getElementById('innerBg').style.transform = `rotate(${innerRotation}deg)`;
 
             setTimeout(() => {
-                updateMissionDisplay();
-                isSpinningOuter = false;
+                document.getElementById('arkaA').innerText = outerData[outerIndex];
+                document.getElementById('arkaK').innerText = innerData[innerIndex];
+                
+                document.getElementById('standbyPanel').classList.add('hidden');
+                document.getElementById('arkaMission').classList.remove('hidden');
+                
+                document.getElementById('centerPin').innerText = "TAP!";
+                isSpinning = false;
             }, 4000);
         }
 
-        function spinInner() {
-            if(isSpinningInner) return;
-            isSpinningInner = true;
-
-            const selectedIndex = Math.floor(Math.random() * 6);
-            lastInnerIndex = selectedIndex;
-
-            const targetDeg = 360 - (30 + (selectedIndex * 60));
-            innerRotation = (Math.floor(innerRotation / 360) * 360) + (6 * 360) + targetDeg;
-
-            document.getElementById('innerWheel').style.transform = `rotate(${innerRotation}deg)`;
-
-            setTimeout(() => {
-                updateMissionDisplay();
-                isSpinningInner = false;
-            }, 4000);
-        }
-
-        function spinBoth() {
-            spinOuter();
-            spinInner();
-        }
-
-        function resetAll() {
-            if(isSpinningOuter || isSpinningInner) return;
+        function resetGame() {
+            if(isSpinning) return;
             outerRotation = 0;
             innerRotation = 0;
-            document.getElementById('outerWheel').style.transform = `rotate(0deg)`;
-            document.getElementById('innerWheel').style.transform = `rotate(0deg)`;
+            document.getElementById('outerBg').style.transform = `rotate(0deg)`;
+            document.getElementById('innerBg').style.transform = `rotate(0deg)`;
             
             document.getElementById('arkaMission').classList.add('hidden');
             document.getElementById('standbyPanel').classList.remove('hidden');
+            document.getElementById('standbyPanel').innerHTML = `
+                <div class="w-28 h-28 bg-[#1b4965] rounded-full text-white flex items-center justify-center text-6xl mb-8 animate-bounce shadow-lg">
+                    <i class="fa-regular fa-hand-pointer"></i>
+                </div>
+                <h3 class="text-3xl lg:text-4xl font-black text-[#0f2c59] mb-4">Siap Dimainkan!</h3>
+                <p class="text-slate-600 font-medium text-xl lg:text-2xl leading-relaxed max-w-lg">
+                    Tekan tombol <b class="text-red-500">PUTAR RODA</b> di sebelah kiri untuk mendapatkan <b>Misi Pengelolaan Emosi</b> hari ini.
+                </p>
+            `;
+            document.getElementById('centerPin').innerText = "TAP!";
         }
     </script>
 </body>
