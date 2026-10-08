@@ -7,23 +7,32 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Ukuran Roda */
+        /* Ukuran Roda Utama */
         .wheel-container { position: relative; width: 320px; height: 320px; margin: 0 auto; }
         @media(min-width: 1024px) { .wheel-container { width: 600px; height: 600px; } }
         
-        .ring { position: absolute; border-radius: 50%; transition: transform 4s cubic-bezier(0.15, 0.9, 0.2, 1); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+        /* Ring Roda */
+        .ring-wheel { position: absolute; border-radius: 50%; transition: transform 4s cubic-bezier(0.15, 0.9, 0.2, 1); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
         
-        /* Ring Luar & Dalam */
         #outerRing { top: 0; left: 0; width: 100%; height: 100%; background: conic-gradient(#ffb3ba 0deg 60deg, #ffdfba 60deg 120deg, #baffc9 120deg 180deg, #bae1ff 180deg 240deg, #ffc6ff 240deg 300deg, #e8baff 300deg 360deg); border: 6px solid #ffffff; }
+        
         #innerRing { top: 18%; left: 18%; width: 64%; height: 64%; background: conic-gradient(#f8fafc 0deg 60deg, #fff7ed 60deg 120deg, #f0fdf4 120deg 180deg, #eff6ff 180deg 240deg, #faf5ff 240deg 300deg, #fdf2f8 300deg 360deg); border: 5px solid #ffffff; z-index: 10; }
         
-        .slice-content { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; }
+        /* Pembungkus Juring (Fokus pada sumbu tengah) */
+        .slice-wrap { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; transform-origin: 50% 50%; }
         
-        /* Titik Tengah (Bisa di-klik) */
-        .center-pin { position: absolute; top: 41%; left: 41%; width: 18%; height: 18%; background: radial-gradient(circle, #cbd5e1 0%, #64748b 100%); border-radius: 50%; z-index: 50; border: 5px solid #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; color: white; font-size: 1.2rem; font-weight: 900; letter-spacing: 2px; cursor: pointer; pointer-events: auto; transition: transform 0.1s; }
+        /* Kotak Label agar selalu di tepi atas */
+        .label-box { position: absolute; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .outer-label { top: 3%; }
+        .inner-label { top: 6%; }
+        @media(min-width: 1024px) { .outer-label { top: 5%; } .inner-label { top: 10%; } }
+
+        /* Titik Tengah TAP! */
+        .center-pin { position: absolute; top: 41%; left: 41%; width: 18%; height: 18%; background: radial-gradient(circle, #cbd5e1 0%, #64748b 100%); border-radius: 50%; z-index: 50; border: 5px solid #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; color: white; font-size: 1.2rem; font-weight: 900; letter-spacing: 2px; cursor: pointer; transition: transform 0.1s; }
         .center-pin:active { transform: scale(0.95); }
         @media(min-width: 1024px) { .center-pin { font-size: 2rem; border: 8px solid #ffffff; } }
         
+        /* Animasi Kartu */
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
         .game-card { animation: popIn 0.5s ease-out forwards; }
     </style>
@@ -31,7 +40,7 @@
 <body class="bg-[#a8e6cf] text-slate-800 min-h-screen flex flex-col font-sans overflow-x-hidden">
 
     <!-- Header -->
-    <header class="bg-white/60 backdrop-blur-md py-4 px-8 shadow-sm border-b border-white/50 flex justify-between items-center w-full z-50">
+    <header class="bg-white/60 backdrop-blur-md py-4 px-8 shadow-sm border-b border-white/50 flex justify-between items-center w-full relative z-50">
         <div>
             <h1 class="text-3xl font-black text-[#0f2c59] tracking-tight">WHEEL OF EMOTION (WEMOCTION)</h1>
             <p class="text-lg font-bold text-[#1b4965] mt-1">🎮 GAME KELOLA EMOSI METODE ARKA</p>
@@ -41,52 +50,52 @@
         </div>
     </header>
 
-    <!-- Main Content Grid -->
+    <!-- Main Grid -->
     <main class="w-full max-w-[1600px] mx-auto px-6 py-10 flex-grow grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center relative z-10">
         
-        <!-- KOLOM KIRI: Roda Putar -->
+        <!-- KOLOM KIRI: Area Roda -->
         <div class="flex flex-col items-center w-full relative z-20">
             
             <div class="wheel-container">
-                <!-- Panah Merah -->
-                <div class="absolute -top-6 lg:-top-10 left-1/2 -translate-x-1/2 z-40 w-0 h-0 border-l-[15px] lg:border-l-[25px] border-l-transparent border-r-[15px] lg:border-r-[25px] border-r-transparent border-t-[30px] lg:border-t-[50px] border-t-red-600 drop-shadow-xl"></div>
+                <!-- Panah Merah Penunjuk -->
+                <div class="absolute -top-6 lg:-top-10 left-1/2 -translate-x-1/2 z-40 w-0 h-0 border-l-[15px] lg:border-l-[25px] border-l-transparent border-r-[15px] lg:border-r-[25px] border-r-transparent border-t-[30px] lg:border-t-[50px] border-t-red-600 drop-shadow-xl pointer-events-none"></div>
 
-                <!-- Ring Luar (Semua teks dikonfigurasi Horizontal) -->
-                <div id="outerRing" class="ring">
-                    <div class="slice-content flex justify-center" style="transform: rotate(30deg);"><div style="transform: rotate(-30deg);" class="mt-5 lg:mt-10 flex flex-col items-center"><i class="fa-solid fa-face-angry text-base lg:text-3xl mb-1 lg:mb-2 text-red-600"></i><span class="text-center font-extrabold text-[10px] lg:text-[17px] leading-tight">Kritik/<br>Bully</span></div></div>
-                    <div class="slice-content flex justify-center" style="transform: rotate(90deg);"><div style="transform: rotate(-90deg);" class="mt-5 lg:mt-10 flex flex-col items-center"><i class="fa-solid fa-file-xmark text-base lg:text-3xl mb-1 lg:mb-2 text-amber-600"></i><span class="text-center font-extrabold text-[10px] lg:text-[17px] leading-tight">Gagal<br>Ujian</span></div></div>
-                    <div class="slice-content flex justify-center" style="transform: rotate(150deg);"><div style="transform: rotate(-150deg);" class="mt-5 lg:mt-10 flex flex-col items-center"><i class="fa-solid fa-people-arrows text-base lg:text-3xl mb-1 lg:mb-2 text-emerald-700"></i><span class="text-center font-extrabold text-[10px] lg:text-[17px] leading-tight">Konflik<br>Keluarga</span></div></div>
-                    <div class="slice-content flex justify-center" style="transform: rotate(210deg);"><div style="transform: rotate(-210deg);" class="mt-5 lg:mt-10 flex flex-col items-center"><i class="fa-solid fa-user-slash text-base lg:text-3xl mb-1 lg:mb-2 text-sky-700"></i><span class="text-center font-extrabold text-[10px] lg:text-[17px] leading-tight">Dikucilkan</span></div></div>
-                    <div class="slice-content flex justify-center" style="transform: rotate(270deg);"><div style="transform: rotate(-270deg);" class="mt-5 lg:mt-10 flex flex-col items-center"><i class="fa-solid fa-layer-group text-base lg:text-3xl mb-1 lg:mb-2 text-purple-700"></i><span class="text-center font-extrabold text-[10px] lg:text-[17px] leading-tight">Frustrasi<br>Tugas</span></div></div>
-                    <div class="slice-content flex justify-center" style="transform: rotate(330deg);"><div style="transform: rotate(-330deg);" class="mt-5 lg:mt-10 flex flex-col items-center"><i class="fa-solid fa-mobile-screen-button text-base lg:text-3xl mb-1 lg:mb-2 text-pink-600"></i><span class="text-center font-extrabold text-[10px] lg:text-[17px] leading-tight">Insecure<br>Medsos</span></div></div>
+                <!-- Ring Luar -->
+                <div id="outerRing" class="ring-wheel">
+                    <div class="slice-wrap" style="transform: rotate(30deg);"><div class="label-box outer-label"><div style="transform: rotate(-30deg);" class="flex flex-col items-center"><i class="fa-solid fa-face-angry text-[12px] lg:text-3xl mb-0.5 lg:mb-1 text-red-600"></i><span class="font-extrabold text-[9px] lg:text-[16px] leading-tight text-slate-800">Kritik/<br>Bully</span></div></div></div>
+                    <div class="slice-wrap" style="transform: rotate(90deg);"><div class="label-box outer-label"><div style="transform: rotate(-90deg);" class="flex flex-col items-center"><i class="fa-solid fa-file-xmark text-[12px] lg:text-3xl mb-0.5 lg:mb-1 text-amber-600"></i><span class="font-extrabold text-[9px] lg:text-[16px] leading-tight text-slate-800">Gagal<br>Ujian</span></div></div></div>
+                    <div class="slice-wrap" style="transform: rotate(150deg);"><div class="label-box outer-label"><div style="transform: rotate(-150deg);" class="flex flex-col items-center"><i class="fa-solid fa-people-arrows text-[12px] lg:text-3xl mb-0.5 lg:mb-1 text-emerald-700"></i><span class="font-extrabold text-[9px] lg:text-[16px] leading-tight text-slate-800">Konflik<br>Keluarga</span></div></div></div>
+                    <div class="slice-wrap" style="transform: rotate(210deg);"><div class="label-box outer-label"><div style="transform: rotate(-210deg);" class="flex flex-col items-center"><i class="fa-solid fa-user-slash text-[12px] lg:text-3xl mb-0.5 lg:mb-1 text-sky-700"></i><span class="font-extrabold text-[9px] lg:text-[16px] leading-tight text-slate-800">Dikucilkan</span></div></div></div>
+                    <div class="slice-wrap" style="transform: rotate(270deg);"><div class="label-box outer-label"><div style="transform: rotate(-270deg);" class="flex flex-col items-center"><i class="fa-solid fa-layer-group text-[12px] lg:text-3xl mb-0.5 lg:mb-1 text-purple-700"></i><span class="font-extrabold text-[9px] lg:text-[16px] leading-tight text-slate-800">Frustrasi<br>Tugas</span></div></div></div>
+                    <div class="slice-wrap" style="transform: rotate(330deg);"><div class="label-box outer-label"><div style="transform: rotate(-330deg);" class="flex flex-col items-center"><i class="fa-solid fa-mobile-screen-button text-[12px] lg:text-3xl mb-0.5 lg:mb-1 text-pink-600"></i><span class="font-extrabold text-[9px] lg:text-[16px] leading-tight text-slate-800">Insecure<br>Medsos</span></div></div></div>
                 </div>
 
-                <!-- Ring Dalam (Semua teks dikonfigurasi Horizontal) -->
-                <div id="innerRing" class="ring">
-                    <div class="slice-content flex justify-center" style="transform: rotate(30deg);"><div style="transform: rotate(-30deg);" class="mt-3 lg:mt-7 flex flex-col items-center"><i class="fa-solid fa-lungs text-[10px] lg:text-xl mb-0.5 lg:mb-1.5 text-indigo-600"></i><span class="text-center font-bold text-[8px] lg:text-[14px] leading-tight">STOP &<br>Pause</span></div></div>
-                    <div class="slice-content flex justify-center" style="transform: rotate(90deg);"><div style="transform: rotate(-90deg);" class="mt-3 lg:mt-7 flex flex-col items-center"><i class="fa-solid fa-brain text-[10px] lg:text-xl mb-0.5 lg:mb-1.5 text-amber-600"></i><span class="text-center font-bold text-[8px] lg:text-[14px] leading-tight">Labeling<br>Emotion</span></div></div>
-                    <div class="slice-content flex justify-center" style="transform: rotate(150deg);"><div style="transform: rotate(-150deg);" class="mt-3 lg:mt-7 flex flex-col items-center"><i class="fa-solid fa-comments text-[10px] lg:text-xl mb-0.5 lg:mb-1.5 text-emerald-600"></i><span class="text-center font-bold text-[8px] lg:text-[14px] leading-tight">CARA<br>Comm.</span></div></div>
-                    <div class="slice-content flex justify-center" style="transform: rotate(210deg);"><div style="transform: rotate(-210deg);" class="mt-3 lg:mt-7 flex flex-col items-center"><i class="fa-solid fa-heart text-[10px] lg:text-xl mb-0.5 lg:mb-1.5 text-rose-600"></i><span class="text-center font-bold text-[8px] lg:text-[14px] leading-tight">Self<br>Compassion</span></div></div>
-                    <div class="slice-content flex justify-center" style="transform: rotate(270deg);"><div style="transform: rotate(-270deg);" class="mt-3 lg:mt-7 flex flex-col items-center"><i class="fa-solid fa-list-check text-[10px] lg:text-xl mb-0.5 lg:mb-1.5 text-purple-600"></i><span class="text-center font-bold text-[8px] lg:text-[14px] leading-tight">Break It<br>Down</span></div></div>
-                    <div class="slice-content flex justify-center" style="transform: rotate(330deg);"><div style="transform: rotate(-330deg);" class="mt-3 lg:mt-7 flex flex-col items-center"><i class="fa-solid fa-sun text-[10px] lg:text-xl mb-0.5 lg:mb-1.5 text-sky-600"></i><span class="text-center font-bold text-[8px] lg:text-[14px] leading-tight">Reality<br>Check</span></div></div>
+                <!-- Ring Dalam -->
+                <div id="innerRing" class="ring-wheel">
+                    <div class="slice-wrap" style="transform: rotate(30deg);"><div class="label-box inner-label"><div style="transform: rotate(-30deg);" class="flex flex-col items-center"><i class="fa-solid fa-lungs text-[10px] lg:text-xl mb-0.5 lg:mb-1 text-indigo-600"></i><span class="font-bold text-[7px] lg:text-[13px] leading-tight text-slate-700">STOP &<br>Pause</span></div></div></div>
+                    <div class="slice-wrap" style="transform: rotate(90deg);"><div class="label-box inner-label"><div style="transform: rotate(-90deg);" class="flex flex-col items-center"><i class="fa-solid fa-brain text-[10px] lg:text-xl mb-0.5 lg:mb-1 text-amber-600"></i><span class="font-bold text-[7px] lg:text-[13px] leading-tight text-slate-700">Labeling<br>Emotion</span></div></div></div>
+                    <div class="slice-wrap" style="transform: rotate(150deg);"><div class="label-box inner-label"><div style="transform: rotate(-150deg);" class="flex flex-col items-center"><i class="fa-solid fa-comments text-[10px] lg:text-xl mb-0.5 lg:mb-1 text-emerald-600"></i><span class="font-bold text-[7px] lg:text-[13px] leading-tight text-slate-700">CARA<br>Comm.</span></div></div></div>
+                    <div class="slice-wrap" style="transform: rotate(210deg);"><div class="label-box inner-label"><div style="transform: rotate(-210deg);" class="flex flex-col items-center"><i class="fa-solid fa-heart text-[10px] lg:text-xl mb-0.5 lg:mb-1 text-rose-600"></i><span class="font-bold text-[7px] lg:text-[13px] leading-tight text-slate-700">Self<br>Compassion</span></div></div></div>
+                    <div class="slice-wrap" style="transform: rotate(270deg);"><div class="label-box inner-label"><div style="transform: rotate(-270deg);" class="flex flex-col items-center"><i class="fa-solid fa-list-check text-[10px] lg:text-xl mb-0.5 lg:mb-1 text-purple-600"></i><span class="font-bold text-[7px] lg:text-[13px] leading-tight text-slate-700">Break It<br>Down</span></div></div></div>
+                    <div class="slice-wrap" style="transform: rotate(330deg);"><div class="label-box inner-label"><div style="transform: rotate(-330deg);" class="flex flex-col items-center"><i class="fa-solid fa-sun text-[10px] lg:text-xl mb-0.5 lg:mb-1 text-sky-600"></i><span class="font-bold text-[7px] lg:text-[13px] leading-tight text-slate-700">Reality<br>Check</span></div></div></div>
                 </div>
 
-                <!-- Tombol Tengah TAP! -->
+                <!-- Tombol Putar Tengah -->
                 <div class="center-pin" id="centerPin" onclick="spinWheels()">TAP!</div>
             </div>
 
-            <!-- Tombol Putar Utama -->
+            <!-- Tombol Aksi Bawah Roda -->
             <div class="flex gap-4 w-full max-w-[600px] mt-10 lg:mt-14 relative z-50">
                 <button onclick="spinWheels()" class="flex-1 bg-red-500 hover:bg-red-600 active:scale-95 text-white font-black py-4 lg:py-5 px-6 rounded-2xl shadow-xl transition text-lg lg:text-2xl tracking-widest uppercase flex items-center justify-center cursor-pointer">
-                    <i class="fa-solid fa-play mr-3"></i> PUTAR RODA
+                    <i class="fa-solid fa-play mr-3 pointer-events-none"></i> PUTAR RODA
                 </button>
                 <button onclick="resetGame()" class="bg-white hover:bg-slate-100 active:scale-95 text-slate-700 font-bold py-4 lg:py-5 px-6 lg:px-8 rounded-2xl shadow-lg border-2 border-slate-200 transition text-lg lg:text-2xl cursor-pointer">
-                    <i class="fa-solid fa-rotate-right"></i>
+                    <i class="fa-solid fa-rotate-right pointer-events-none"></i>
                 </button>
             </div>
         </div>
 
-        <!-- KOLOM KANAN: Panel Standby & Misi -->
+        <!-- KOLOM KANAN: Misi ARKA -->
         <div class="w-full flex flex-col justify-center h-full min-h-[500px] relative z-20">
             
             <!-- Panel Standby -->
@@ -103,8 +112,8 @@
             <!-- Panel Misi ARKA -->
             <div id="arkaMission" class="w-full hidden game-card h-full flex-col">
                 <div class="bg-[#1b4965] text-white p-6 rounded-t-[2rem] flex justify-between items-center shadow-lg border-b-[8px] border-amber-400">
-                    <span class="font-black tracking-widest text-2xl lg:text-3xl"><i class="fa-solid fa-bullseye text-amber-400 mr-3"></i> MISI ARKA KAMU!</span>
-                    <span class="bg-amber-400 text-[#1b4965] text-sm lg:text-base font-black px-4 py-1.5 rounded-full shadow-sm uppercase">Tantangan Aktif</span>
+                    <span class="font-black tracking-widest text-xl lg:text-3xl"><i class="fa-solid fa-bullseye text-amber-400 mr-3"></i> MISI ARKA KAMU!</span>
+                    <span class="bg-amber-400 text-[#1b4965] text-xs lg:text-base font-black px-4 py-1.5 rounded-full shadow-sm uppercase">Tantangan Aktif</span>
                 </div>
                 
                 <div class="bg-white p-8 lg:p-10 rounded-b-[2rem] shadow-2xl border-4 border-t-0 border-[#1b4965] flex-grow flex flex-col justify-center space-y-6 lg:space-y-8">
@@ -120,7 +129,7 @@
                         <div class="bg-amber-500 text-white font-black text-2xl w-14 h-14 flex items-center justify-center rounded-2xl flex-shrink-0 shadow-md">R</div>
                         <div>
                             <h4 class="text-lg lg:text-xl font-black text-amber-700 uppercase tracking-wide">Refleksi Diri</h4>
-                            <p class="text-base lg:text-xl text-slate-700 mt-2 font-medium leading-relaxed">Apa emosi pertama yang muncul di hatimu saat situasi tersebut terjadi? <i class="text-amber-800">(Marah, sedih, kecewa, atau panik?)</i></p>
+                            <p class="text-base lg:text-xl text-slate-700 mt-2 font-medium leading-relaxed">Apa emosi pertama yang muncul di hatimu saat situasi tersebut terjadi? <i class="text-amber-800 font-semibold">(Marah, sedih, kecewa, atau panik?)</i></p>
                         </div>
                     </div>
 
