@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wemoction - Roda Putar Kelola Emosi</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .wheel-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin: 0 auto;
+        }
+        @media(min-width: 640px) {
+            .wheel-container {
+                width: 380px;
+                height: 380px;
+            }
+        }
+        .ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 4s cubic-bezier(0.15, 0.9, 0.2, 1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between font-sans">
+
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white py-4 shadow-md">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-xl sm:text-2xl font-bold">WHEEL OF EMOTION (WEMOCTION)</h1>
+            <p class="text-xs sm:text-sm text-indigo-100 mt-1">Media Interaktif Layanan BK: Penguatan Jurus Kelola Emosi dengan Metode ARKA</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-6 flex-grow flex flex-col md:flex-row gap-8 items-center justify-center">
+        
+        <!-- Sisi Kiri: Simulasi Roda Putar -->
+        <div class="bg-white p-6 rounded-2xl shadow-xl border border-slate-100 flex flex-col items-center w-full md:w-1/2">
+            <h2 class="text-base font-semibold text-indigo-700 mb-4 text-center">🎯 Putar Roda Pemicu & Teknik</h2>
+            
+            <!-- Area Roda -->
+            <div class="wheel-container mb-6">
+                <!-- Penunjuk / Jarum (Top) -->
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-30 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[20px] border-t-red-600 drop-shadow"></div>
+
+                <!-- Ring Luar (Situasi Pemicu Emosi) -->
+                <div id="outerRing" class="ring bg-indigo-100 border-4 border-indigo-500 overflow-hidden text-center p-2 text-xs font-bold text-indigo-900 flex flex-col justify-between">
+                    <div class="absolute inset-0 flex items-center justify-center p-6 bg-indigo-50 rounded-full border border-indigo-200">
+                        <span id="outerText" class="text-sm sm:text-base font-extrabold text-indigo-900">Klik 'Putar Roda' di Bawah</span>
+                    </div>
+                </div>
+
+                <!-- Ring Dalam (Teknik Coping / Kelola Emosi) -->
+                <div id="innerRing" class="ring bg-amber-50 border-4 border-amber-500 overflow-hidden text-center p-4 text-xs font-bold text-amber-900 scale-50 z-20 shadow-2xl">
+                    <div class="absolute inset-0 flex items-center justify-center p-4 bg-amber-100 rounded-full">
+                        <span id="innerText" class="text-xs sm:text-sm font-bold text-amber-900">Teknik Coping</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tombol Aksi -->
+            <div class="flex gap-3 w-full">
+                <button onclick="spinWheels()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-xl shadow transition transform active:scale-95 text-sm cursor-pointer">
+                    🔄 Putar Roda
+                </button>
+                <button onclick="resetWheels()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium py-2.5 px-4 rounded-xl transition text-sm cursor-pointer">
+                    Reset
+                </button>
+            </div>
+        </div>
+
+        <!-- Sisi Kanan: Hasil & Panduan Metode ARKA -->
+        <div class="bg-white p-6 rounded-2xl shadow-xl border border-slate-100 w-full md:w-1/2 flex flex-col justify-between">
+            <div>
+                <h2 class="text-base font-semibold text-slate-700 mb-3 border-b pb-2">📋 Hasil Analisis Tantangan</h2>
+                
+                <div class="space-y-3 mb-4">
+                    <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-100">
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider block">Situasi Pemicu (Ring Luar):</span>
+                        <p id="resultOuter" class="text-sm text-indigo-950 font-medium mt-0.5">Belum dipilih...</p>
+                    </div>
+
+                    <div class="bg-amber-50 p-3 rounded-xl border border-amber-100">
+                        <span class="text-xs font-bold text-amber-600 uppercase tracking-wider block">Teknik Pengelolaan (Ring Dalam):</span>
+                        <p id="resultInner" class="text-sm text-amber-950 font-medium mt-0.5">Belum dipilih...</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Panduan Singkat Metode ARKA:</h3>
+                    <ul class="text-xs text-slate-600 space-y-1 list-disc list-inside">
+                        <li><strong>Aktivitas:</strong> Analisis kasus pemicu emosi di atas.</li>
+                        <li><strong>Refleksi:</strong> Ceritakan pengalaman serupa yang pernah dialami.</li>
+                        <li><strong>Konseptualisasi:</strong> Terapkan teknik coping untuk solusinya.</li>
+                        <li><strong>Aplikasi:</strong> Tulis komitmen tindakan nyata di LKPD.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t text-center">
+                <span class="text-xs text-slate-400">Media Bimbingan Klasikal & Kelompok BK</span>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t py-3 text-center text-xs text-slate-500">
+        <p>Wemoction Web App &copy; 2026 — Layanan Bimbingan dan Konseling</p>
+    </footer>
+
+    <!-- JavaScript Interaksi Roda Putar -->
+    <script>
+        const outerOptions = [
+            "1. Mendapat Kritik/Komentar Negatif di Circle Pertemanan",
+            "2. Gagal atau Mendapat Nilai Ujian di Bawah Harapan",
+            "3. Salah Paham atau Berkonflik dengan Orang Tua di Rumah",
+            "4. Merasa Diabaikan atau Dikucilkan dalam Kelompok",
+            "5. Frustrasi karena Tugas Menumpuk dan Tenggat Waktu (Deadline)",
+            "6. Merasa Insecure Melihat Pencapaian Orang Lain di Medsos"
+        ];
+
+        const innerOptions = [
+            "1. STOP & Pause: Jeda & Ambil Napas Dalam 3 Kali",
+            "2. Labeling the Emotion: Kenali & Sebutkan Nama Emosinya",
+            "3. Cognitive Reframing: Ubah Pikiran Negatif Jadi Rasional",
+            "4. Physical Release: Salurkan Energi Lewat Olahraga/Jurnal",
+            "5. Assertive Communication: Sampaikan Pakai Kalimat 'Aku Merasa...'",
+            "6. Grounding / Mindfulness: Fokus Panca Indra Saat Ini"
+        ];
+
+        let outerRotation = 0;
+        let innerRotation = 0;
+
+        function spinWheels() {
+            const randomOuterSpin = Math.floor(Math.random() * 360) + 1440;
+            const randomInnerSpin = Math.floor(Math.random() * 360) + 1800;
+
+            outerRotation += randomOuterSpin;
+            innerRotation += randomInnerSpin;
+
+            const outerRing = document.getElementById('outerRing');
+            const innerRing = document.getElementById('innerRing');
+
+            outerRing.style.transform = `rotate(${outerRotation}deg)`;
+            innerRing.style.transform = `scale(0.5) rotate(${innerRotation}deg)`;
+
+            setTimeout(() => {
+                const outerIndex = Math.floor(((outerRotation % 360) / 360) * outerOptions.length);
+                const innerIndex = Math.floor(((innerRotation % 360) / 360) * innerOptions.length);
+
+                const selectedOuter = outerOptions[(outerOptions.length - (outerIndex % outerOptions.length)) % outerOptions.length];
+                const selectedInner = innerOptions[(innerOptions.length - (innerIndex % innerOptions.length)) % innerOptions.length];
+
+                document.getElementById('outerText').innerText = "Terpilih!";
+                document.getElementById('innerText').innerText = "Terpilih!";
+                
+                document.getElementById('resultOuter').innerText = selectedOuter;
+                document.getElementById('resultInner').innerText = selectedInner;
+            }, 4000);
+        }
+
+        function resetWheels() {
+            outerRotation = 0;
+            innerRotation = 0;
+            document.getElementById('outerRing').style.transform = `rotate(0deg)`;
+            document.getElementById('innerRing').style.transform = `scale(0.5) rotate(0deg)`;
+            document.getElementById('outerText').innerText = "Klik 'Putar Roda'";
+            document.getElementById('innerText').innerText = "Teknik Coping";
+            document.getElementById('resultOuter').innerText = "Belum dipilih...";
+            document.getElementById('resultInner').innerText = "Belum dipilih...";
+        }
+    </script>
+</body>
+</html>
